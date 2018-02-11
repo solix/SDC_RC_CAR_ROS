@@ -1,5 +1,8 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <Servo.h>
+
+Servo cameraServo1;
 ros::NodeHandle nh;
 int ENA = 5; 
 int IN1 =6;
@@ -7,7 +10,10 @@ int IN2 =7;
 int IN3 = 8;
 int IN4 = 9;
 int ENB = 11; 
-int maxSpeed = 200; //range is 0 - 255
+int maxSpeed = 250; //range is 0 - 255
+int max_servo = 180;
+int min_servo = 0;
+int val_servo = 90;
 
 
 void messageCb(const std_msgs::Int16& msg){
@@ -19,22 +25,24 @@ void messageCb(const std_msgs::Int16& msg){
   else if(msg.data == 0){
    stop_car();
   }
-    else if(msg.data == 2){
+  else if(msg.data == 2){
    moveBackward();
   }
-    else if(msg.data == 6){
+  else if(msg.data == 6){
    turn_right();
   }
-    else if(msg.data == 7){
+  else if(msg.data == 7){
    turn_left();
   }
-  
-  
-  
-  
-  
-     
-
+  else if(msg.data == 8){
+   camera_up();
+  }
+  else if(msg.data == 9){
+   camera_down();
+  }
+  else if(msg.data == 10){
+   camera_center();
+ }
 
 }
 
@@ -53,12 +61,20 @@ void setup()
     digitalWrite(ENB,LOW);
     nh.initNode();
     nh.subscribe(sub);
+    cameraServo1.attach(3);
+    cameraServo1.write(val_servo);
    
 }
 
 void loop(){
   
-  nh.spinOnce();
+
+  
+     nh.spinOnce();
+
+  
+  
+  
       //delay(1);
 
   
@@ -119,4 +135,37 @@ digitalWrite(IN1,LOW);
   digitalWrite(IN4,LOW);
 
 }
+
+void camera_up(){
+  
+ 
+   
+     cameraServo1.write(45);
+     delay(500);
+
+     
+
+  
+
+}
+void camera_down(){
+  
+  cameraServo1.write(135);
+     delay(500);
+  
+
+  
+
+}
+
+void camera_center(){
+  
+  cameraServo1.write(90);
+     delay(500);
+  
+
+  
+
+}
+
 
